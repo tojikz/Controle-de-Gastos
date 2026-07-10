@@ -1,4 +1,4 @@
-
+/* ============================================
 */
 :root {
   /* --- Cores de fundo --- */
@@ -47,6 +47,16 @@
 }
 
 
+/* ==========================================
+   🔄 RESET CSS
+   ==========================================
+   Cada navegador tem estilos padrão diferentes.
+   O reset remove esses padrões para termos um ponto de partida igual.
+   
+   "box-sizing: border-box" faz com que padding e border
+   sejam incluídos no tamanho total do elemento.
+   Sem isso, um div de 100px com 10px de padding teria 120px.
+   Com isso, ele continua com 100px (o conteúdo que encolhe).
 */
 *,
 *::before,
