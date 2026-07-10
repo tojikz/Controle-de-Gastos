@@ -1,4 +1,5 @@
-# Hi 👋, me chamo Lucca
+
+# Olá 👋, me chamo Lucca
 
 🚀 **jr Software Engineer**  
 🇧🇷 Brazil
@@ -16,3 +17,6 @@ Este projeto é sobre um controle de gastos, feito exatamente para quem não sab
 **LEMBRETE**
 
 Por ser a V1, não terá como criar contas até o momento.          
+
+
+
