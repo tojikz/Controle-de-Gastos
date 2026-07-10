@@ -1,0 +1,989 @@
+
+*/
+:root {
+  /* --- Cores de fundo --- */
+  --cor-fundo-1: #0f0f23;          /* Azul muito escuro (fundo principal) */
+  --cor-fundo-2: #1a1a3e;          /* Azul escuro um pouco mais claro */
+  --cor-fundo-3: #16162e;          /* Tom intermediário para o conteúdo */
+  
+  /* --- Cores dos cards (efeito glassmorphism) --- */
+  --cor-card: rgba(255, 255, 255, 0.04);          /* Branco quase invisível */
+  --cor-card-hover: rgba(255, 255, 255, 0.07);    /* Um pouco mais visível no hover */
+  --cor-card-borda: rgba(255, 255, 255, 0.08);    /* Borda sutil */
+  
+  /* --- Cores temáticas (as mais importantes!) --- */
+  --cor-receita: #00e5a0;     /* Verde vibrante para receitas */
+  --cor-receita-bg: rgba(0, 229, 160, 0.1);   /* Verde com transparência */
+  --cor-despesa: #ff5757;     /* Vermelho para despesas */
+  --cor-despesa-bg: rgba(255, 87, 87, 0.1);   /* Vermelho com transparência */
+  --cor-saldo: #5ce1e6;       /* Ciano/azul claro para saldo */
+  --cor-saldo-bg: rgba(92, 225, 230, 0.1);    /* Ciano com transparência */
+  --cor-destaque: #7c5cfc;    /* Roxo para destaques e botões */
+  --cor-destaque-hover: #9179ff;  /* Roxo mais claro no hover */
+  
+  /* --- Cores de texto --- */
+  --cor-texto: #f0f0f5;           /* Texto principal (quase branco) */
+  --cor-texto-secundario: #8888a0; /* Texto secundário (cinza) */
+  --cor-texto-escuro: #555570;     /* Texto bem discreto */
+  
+  /* --- Cores de inputs --- */
+  --cor-input: rgba(255, 255, 255, 0.06);        /* Fundo do input */
+  --cor-input-borda: rgba(255, 255, 255, 0.1);   /* Borda do input */
+  --cor-input-foco: rgba(124, 92, 252, 0.4);     /* Brilho ao focar */
+  
+  /* --- Dimensões e espaçamentos --- */
+  --raio-borda: 16px;       /* Arredondamento dos cantos */
+  --raio-borda-sm: 10px;    /* Arredondamento menor */
+  --raio-borda-xs: 8px;     /* Arredondamento ainda menor */
+  --espaco: 24px;           /* Espaçamento padrão */
+  --espaco-sm: 16px;        /* Espaçamento pequeno */
+  --espaco-xs: 12px;        /* Espaçamento muito pequeno */
+  
+  /* --- Efeitos --- */
+  --sombra: 0 8px 32px rgba(0, 0, 0, 0.3);
+  --sombra-hover: 0 12px 48px rgba(0, 0, 0, 0.4);
+  --transicao: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* Transição suave */
+  --blur: blur(12px);        /* Desfoque do glassmorphism */
+}
+
+
+*/
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  /* Scroll suave ao clicar em links de âncora */
+  scroll-behavior: smooth;
+}
+
+
+/* ==========================================
+   🎨 CORPO DA PÁGINA (BODY)
+   ==========================================
+   O body é o elemento que contém tudo visível.
+   Aqui definimos: fundo, fonte, e cor do texto padrão.
+*/
+body {
+  /* 
+    font-family define a fonte do texto.
+    'Inter' é a fonte que carregamos do Google Fonts.
+    Se ela não carregar, usa as fontes de fallback (system-ui, sans-serif).
+  */
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  
+  /* 
+    background: linear-gradient cria um degradê (gradiente).
+    135deg é o ângulo (diagonal).
+    Vai do azul muito escuro para um tom levemente roxo.
+  */
+  background: linear-gradient(135deg, var(--cor-fundo-1) 0%, var(--cor-fundo-2) 50%, var(--cor-fundo-3) 100%);
+  
+  /* O fundo fica fixo mesmo quando rola a página */
+  background-attachment: fixed;
+  
+  color: var(--cor-texto);
+  
+  /* min-height: 100vh garante que o body ocupe TODA a altura da tela */
+  min-height: 100vh;
+  
+  /* Suaviza a renderização das fontes */
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.6;
+}
+
+
+/* ==========================================
+   📦 CONTAINER PRINCIPAL
+   ==========================================
+   Centraliza o conteúdo e limita a largura máxima.
+   Assim o site não fica esticado demais em telas grandes.
+*/
+.app-container {
+  max-width: 1280px;          /* Largura máxima */
+  margin: 0 auto;             /* Centraliza horizontalmente */
+  padding: var(--espaco);     /* Espaço interno */
+  padding-top: var(--espaco-sm);
+}
+
+
+/* ==========================================
+   🏷️ CABEÇALHO (HEADER)
+   ==========================================
+*/
+.app-header {
+  text-align: center;
+  padding: 32px 0 40px;
+  position: relative;
+}
+
+.header-content {
+  position: relative;
+}
+
+.header-title {
+  /* 
+    display: flex + align-items: center
+    Coloca o ícone e o texto lado a lado, centralizados verticalmente.
+  */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;   /* Espaço entre o ícone e o texto */
+}
+
+.header-icon {
+  font-size: 2.5rem;
+  /* Animação sutil de flutuação (definida mais abaixo com @keyframes) */
+  animation: float 3s ease-in-out infinite;
+}
+
+.app-header h1 {
+  font-size: 2.2rem;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  /* 
+    Texto com gradiente! Um efeito visual moderno.
+    1. Criamos um gradiente como background
+    2. background-clip: text faz o gradiente aparecer SÓ no texto
+    3. color: transparent torna o texto invisível para o gradiente aparecer
+  */
+  background: linear-gradient(135deg, var(--cor-texto) 0%, var(--cor-saldo) 50%, var(--cor-destaque) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.header-subtitle {
+  color: var(--cor-texto-secundario);
+  font-size: 1rem;
+  margin-top: 8px;
+  font-weight: 300;
+}
+
+
+/* ==========================================
+   💳 CARDS DE RESUMO (Receitas, Despesas, Saldo)
+   ==========================================
+   Usamos CSS Grid para organizar os 3 cards em colunas.
+   
+   CSS GRID — Explicação:
+   - display: grid ativa o modo grade
+   - grid-template-columns define quantas colunas e seus tamanhos
+   - repeat(3, 1fr) = 3 colunas de tamanho igual (1fr = 1 fração)
+   - gap = espaço entre os itens da grade
+*/
+.summary-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--espaco);
+  margin-bottom: var(--espaco);
+}
+
+/* --- Estilo base de TODOS os cards --- */
+.card {
+  /*
+    GLASSMORPHISM: O efeito de "vidro fosco" moderno.
+    
+    1. background com rgba = fundo semi-transparente
+    2. backdrop-filter: blur() = desfoca o que está atrás do card
+    3. border semi-transparente = dá uma leve borda de luz
+    
+    Combinados, criam o efeito de vidro!
+  */
+  background: var(--cor-card);
+  backdrop-filter: var(--blur);
+  -webkit-backdrop-filter: var(--blur);
+  border: 1px solid var(--cor-card-borda);
+  border-radius: var(--raio-borda);
+  padding: var(--espaco);
+  
+  /* Transição suave para o efeito hover */
+  transition: var(--transicao);
+  
+  /* Posição relativa para posicionar elementos filhos */
+  position: relative;
+  overflow: hidden;
+}
+
+/* --- Efeito ao passar o mouse sobre um card --- */
+/* 
+  :hover é uma pseudo-classe que ativa quando o mouse está em cima.
+  Aqui fazemos o card "subir" um pouco e mudar a cor de fundo.
+  
+  transform: translateY(-4px) = move 4px para cima
+*/
+.card:hover {
+  background: var(--cor-card-hover);
+  transform: translateY(-4px);
+  box-shadow: var(--sombra-hover);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+/* --- Cards de resumo (receita, despesa, saldo) --- */
+.summary-card {
+  position: relative;
+  /* Cada card aparece com uma animação de entrada */
+  animation: fadeInUp 0.6s ease-out backwards;
+}
+
+/* 
+  Atraso na animação de cada card.
+  O primeiro aparece imediatamente, o segundo após 0.1s, o terceiro após 0.2s.
+  Isso cria um efeito cascata bonito!
+  
+  nth-child(1) = primeiro filho, nth-child(2) = segundo, etc.
+*/
+.summary-card:nth-child(1) { animation-delay: 0s; }
+.summary-card:nth-child(2) { animation-delay: 0.1s; }
+.summary-card:nth-child(3) { animation-delay: 0.2s; }
+
+/* 
+  Decoração: uma linha colorida no topo de cada card.
+  Usamos ::before (pseudo-elemento) para criar um elemento 
+  decorativo SEM adicionar HTML extra.
+*/
+.summary-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  border-radius: var(--raio-borda) var(--raio-borda) 0 0;
+}
+
+/* Cada tipo de card tem uma cor diferente na linha decorativa */
+.card-income::before {
+  background: linear-gradient(90deg, var(--cor-receita), rgba(0, 229, 160, 0.3));
+}
+.card-expense::before {
+  background: linear-gradient(90deg, var(--cor-despesa), rgba(255, 87, 87, 0.3));
+}
+.card-balance::before {
+  background: linear-gradient(90deg, var(--cor-saldo), rgba(92, 225, 230, 0.3));
+}
+
+/* Cabeçalho interno do card (ícone + título) */
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.card-icon {
+  font-size: 1.5rem;
+}
+
+.card-header h3 {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--cor-texto-secundario);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Valor do card (o número grande) */
+.card-value {
+  font-size: 1.85rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  letter-spacing: -0.5px;
+}
+
+/* Cada card tem sua cor de valor */
+.card-income .card-value { color: var(--cor-receita); }
+.card-expense .card-value { color: var(--cor-despesa); }
+.card-balance .card-value { color: var(--cor-saldo); }
+
+/* Badge (etiqueta) pequena no card */
+.card-badge {
+  font-size: 0.7rem;
+  font-weight: 500;
+  padding: 4px 10px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.card-income .card-badge {
+  background: var(--cor-receita-bg);
+  color: var(--cor-receita);
+}
+.card-expense .card-badge {
+  background: var(--cor-despesa-bg);
+  color: var(--cor-despesa);
+}
+.card-balance .card-badge {
+  background: var(--cor-saldo-bg);
+  color: var(--cor-saldo);
+}
+
+
+/* ==========================================
+   📐 LAYOUT DE CONTEÚDO (Grid de 2 colunas)
+   ==========================================
+   O conteúdo principal é dividido em duas colunas:
+   - Esquerda (menor): Formulário + Gráfico
+   - Direita (maior): Histórico de transações
+   
+   "5fr 7fr" significa: a primeira coluna ocupa 5 partes
+   e a segunda 7 partes do espaço total (proporção 5:7).
+*/
+.content-grid {
+  display: grid;
+  grid-template-columns: 5fr 7fr;
+  gap: var(--espaco);
+  animation: fadeInUp 0.6s ease-out 0.3s backwards;
+}
+
+.left-panel {
+  /* 
+    display: flex + flex-direction: column
+    Organiza os itens em COLUNA (um embaixo do outro).
+  */
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaco);
+}
+
+
+/* ==========================================
+   📝 FORMULÁRIO
+   ==========================================
+*/
+.section-title {
+  font-size: 1.15rem;
+  font-weight: 600;
+  margin-bottom: var(--espaco);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--cor-texto);
+}
+
+.form-card {
+  /* Não queremos o efeito hover de "subir" no formulário */
+}
+.form-card:hover {
+  transform: none;
+}
+
+/* Grupo de campo (label + input) */
+.form-group {
+  margin-bottom: var(--espaco-sm);
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--cor-texto-secundario);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* 
+  Estilo dos inputs e selects.
+  width: 100% faz ocupar toda a largura disponível.
+*/
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 12px 16px;
+  background: var(--cor-input);
+  border: 1px solid var(--cor-input-borda);
+  border-radius: var(--raio-borda-xs);
+  color: var(--cor-texto);
+  font-family: inherit;
+  font-size: 0.95rem;
+  transition: var(--transicao);
+  outline: none;   /* Remove a borda azul padrão do navegador */
+}
+
+/* 
+  Efeito de foco: quando o usuário clica/foca no input.
+  Adicionamos uma borda colorida e um brilho sutil.
+  box-shadow cria o efeito de "glow" (brilho) ao redor.
+*/
+.form-group input:focus,
+.form-group select:focus {
+  border-color: var(--cor-destaque);
+  box-shadow: 0 0 0 3px var(--cor-input-foco);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* Placeholder (texto de exemplo cinza dentro do input) */
+.form-group input::placeholder {
+  color: var(--cor-texto-escuro);
+}
+
+/* Dois campos lado a lado */
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--espaco-sm);
+}
+
+/* Select (dropdown) — personalização */
+.form-group select {
+  cursor: pointer;
+  /* appearance: none remove o visual padrão do select */
+  appearance: none;
+  -webkit-appearance: none;
+  /* Adicionamos uma setinha personalizada com CSS */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%238888a0' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10l-5 5z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px;
+}
+
+/* Opções do select */
+.form-group select option {
+  background: var(--cor-fundo-2);
+  color: var(--cor-texto);
+  padding: 8px;
+}
+
+
+/* ==========================================
+   🔘 BOTÃO DE ADICIONAR
+   ==========================================
+*/
+.btn-submit {
+  width: 100%;
+  padding: 14px;
+  margin-top: 8px;
+  /* 
+    Gradiente no botão! Vai do roxo para um tom mais claro.
+    Isso dá um visual premium e moderno.
+  */
+  background: linear-gradient(135deg, var(--cor-destaque), var(--cor-destaque-hover));
+  color: white;
+  border: none;
+  border-radius: var(--raio-borda-xs);
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transicao);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Efeito hover no botão */
+.btn-submit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(124, 92, 252, 0.35);
+  filter: brightness(1.1);
+}
+
+/* Efeito ao clicar (pressionar) o botão */
+.btn-submit:active {
+  transform: translateY(0);
+  filter: brightness(0.95);
+}
+
+.btn-icon {
+  font-size: 1.1rem;
+}
+
+
+/* ==========================================
+   📊 GRÁFICO
+   ==========================================
+*/
+.chart-card:hover {
+  transform: none;
+}
+
+.chart-wrapper {
+  position: relative;
+  max-height: 280px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Mensagem quando não há dados para o gráfico */
+.empty-message {
+  text-align: center;
+  color: var(--cor-texto-escuro);
+  font-size: 0.9rem;
+  padding: 20px;
+}
+
+
+/* ==========================================
+   📋 HISTÓRICO DE TRANSAÇÕES
+   ==========================================
+*/
+.history-card {
+  /* 
+    min-height garante que o card tenha uma altura mínima,
+    mesmo quando não há transações.
+  */
+  min-height: 500px;
+  display: flex;
+  flex-direction: column;
+}
+
+.history-card:hover {
+  transform: none;
+}
+
+/* Barra de filtros (busca + dropdown) */
+.filter-bar {
+  display: flex;
+  gap: var(--espaco-xs);
+  margin-bottom: var(--espaco-sm);
+}
+
+.search-wrapper {
+  /* 
+    flex: 1 faz este elemento ocupar TODO o espaço disponível.
+    O select ao lado mantém seu tamanho natural.
+  */
+  flex: 1;
+  position: relative;
+}
+
+.search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.85rem;
+  pointer-events: none;   /* Não interfere no clique do input */
+}
+
+.search-wrapper input {
+  width: 100%;
+  padding: 10px 12px 10px 36px;  /* Padding extra à esquerda para o ícone */
+  background: var(--cor-input);
+  border: 1px solid var(--cor-input-borda);
+  border-radius: var(--raio-borda-xs);
+  color: var(--cor-texto);
+  font-family: inherit;
+  font-size: 0.85rem;
+  transition: var(--transicao);
+  outline: none;
+}
+
+.search-wrapper input:focus {
+  border-color: var(--cor-destaque);
+  box-shadow: 0 0 0 3px var(--cor-input-foco);
+}
+
+.search-wrapper input::placeholder {
+  color: var(--cor-texto-escuro);
+}
+
+.filter-bar select {
+  padding: 10px 32px 10px 12px;
+  background: var(--cor-input);
+  border: 1px solid var(--cor-input-borda);
+  border-radius: var(--raio-borda-xs);
+  color: var(--cor-texto);
+  font-family: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: var(--transicao);
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%238888a0' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10l-5 5z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+}
+
+.filter-bar select:focus {
+  border-color: var(--cor-destaque);
+  box-shadow: 0 0 0 3px var(--cor-input-foco);
+}
+
+.filter-bar select option {
+  background: var(--cor-fundo-2);
+  color: var(--cor-texto);
+}
+
+/* Lista de transações (scrollável) */
+.transaction-list {
+  flex: 1;
+  overflow-y: auto;
+  max-height: 460px;
+  padding-right: 4px;
+}
+
+/* Estilo da barra de rolagem (scrollbar) personalizada */
+.transaction-list::-webkit-scrollbar {
+  width: 6px;
+}
+.transaction-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+.transaction-list::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+.transaction-list::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+
+/* ==========================================
+   💳 ITEM DE TRANSAÇÃO (cada linha do histórico)
+   ==========================================
+*/
+.transaction-item {
+  display: flex;
+  align-items: center;
+  padding: 14px 16px;
+  background: var(--cor-input);
+  border: 1px solid transparent;
+  border-radius: var(--raio-borda-sm);
+  margin-bottom: 8px;
+  transition: var(--transicao);
+  /* Animação de entrada */
+  animation: slideIn 0.3s ease-out;
+}
+
+.transaction-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: var(--cor-card-borda);
+}
+
+/* Ícone da categoria (emoji à esquerda) */
+.transaction-icon {
+  font-size: 1.5rem;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--raio-borda-xs);
+  margin-right: 14px;
+  flex-shrink: 0;  /* Não deixa o ícone encolher */
+}
+
+/* Cores de fundo do ícone baseadas no tipo */
+.transaction-item.income .transaction-icon {
+  background: var(--cor-receita-bg);
+}
+.transaction-item.expense .transaction-icon {
+  background: var(--cor-despesa-bg);
+}
+
+/* Informações da transação (descrição + data) */
+.transaction-info {
+  flex: 1;   /* Ocupa todo o espaço disponível */
+  min-width: 0;  /* Permite truncamento de texto */
+}
+
+.transaction-description {
+  font-weight: 500;
+  font-size: 0.95rem;
+  color: var(--cor-texto);
+  /* Trunca textos muito longos com "..." */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.transaction-meta {
+  font-size: 0.75rem;
+  color: var(--cor-texto-secundario);
+  margin-top: 3px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.transaction-category {
+  padding: 1px 6px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+  font-size: 0.7rem;
+}
+
+/* Valor da transação (à direita) */
+.transaction-amount {
+  font-weight: 700;
+  font-size: 1rem;
+  margin-right: 12px;
+  white-space: nowrap;
+}
+
+/* Verde para receita, vermelho para despesa */
+.transaction-item.income .transaction-amount {
+  color: var(--cor-receita);
+}
+.transaction-item.expense .transaction-amount {
+  color: var(--cor-despesa);
+}
+
+/* Botão de deletar (aparece ao passar o mouse) */
+.btn-delete {
+  background: none;
+  border: none;
+  color: var(--cor-texto-escuro);
+  cursor: pointer;
+  padding: 6px 8px;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: var(--transicao);
+  opacity: 0;      /* Invisível por padrão */
+  flex-shrink: 0;
+}
+
+/* Aparece quando o mouse está sobre o item */
+.transaction-item:hover .btn-delete {
+  opacity: 1;
+}
+
+.btn-delete:hover {
+  background: var(--cor-despesa-bg);
+  color: var(--cor-despesa);
+}
+
+
+/* ==========================================
+   📝 ESTADO VAZIO (quando não há transações)
+   ==========================================
+*/
+.empty-state {
+  text-align: center;
+  padding: 48px 20px;
+  color: var(--cor-texto-escuro);
+}
+
+.empty-icon {
+  font-size: 3rem;
+  display: block;
+  margin-bottom: 16px;
+  opacity: 0.5;
+}
+
+.empty-state p {
+  font-size: 1rem;
+  margin-bottom: 4px;
+}
+
+.empty-hint {
+  font-size: 0.85rem !important;
+  color: var(--cor-texto-escuro);
+}
+
+
+/* ==========================================
+   🔔 TOAST (NOTIFICAÇÃO)
+   ==========================================
+   Aparece no canto inferior da tela quando o usuário
+   adiciona ou deleta uma transação.
+*/
+.toast {
+  /* 
+    position: fixed faz o elemento ficar fixo na tela,
+    mesmo quando o usuário rola a página.
+  */
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px); /* Começa escondido */
+  padding: 14px 28px;
+  border-radius: var(--raio-borda-sm);
+  font-size: 0.9rem;
+  font-weight: 500;
+  font-family: inherit;
+  z-index: 1000;    /* Fica acima de todos os outros elementos */
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 0.4s ease;
+  opacity: 0;
+  pointer-events: none;
+  backdrop-filter: var(--blur);
+  -webkit-backdrop-filter: var(--blur);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Quando o toast está visível */
+.toast.show {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}
+
+/* Tipos de toast */
+.toast.success {
+  background: rgba(0, 229, 160, 0.15);
+  color: var(--cor-receita);
+  border-color: rgba(0, 229, 160, 0.3);
+}
+
+.toast.error {
+  background: rgba(255, 87, 87, 0.15);
+  color: var(--cor-despesa);
+  border-color: rgba(255, 87, 87, 0.3);
+}
+
+
+/* ==========================================
+   🦶 RODAPÉ (FOOTER)
+   ==========================================
+*/
+.app-footer {
+  text-align: center;
+  padding: 32px 0 16px;
+  color: var(--cor-texto-escuro);
+  font-size: 0.85rem;
+}
+
+
+/* ==========================================
+   ✨ ANIMAÇÕES (@keyframes)
+   ==========================================
+   @keyframes define COMO uma animação acontece.
+   
+   Pense como um flipbook:
+   - "from" (ou 0%) é o primeiro quadro
+   - "to" (ou 100%) é o último quadro
+   - O navegador preenche os quadros intermediários automaticamente
+*/
+
+/* Cards aparecem subindo e aparecendo gradualmente */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;                   /* Invisível */
+    transform: translateY(24px);  /* 24px abaixo */
+  }
+  to {
+    opacity: 1;                   /* Visível */
+    transform: translateY(0);     /* Posição normal */
+  }
+}
+
+/* Ícone do header flutua suavemente */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+/* Transações entram deslizando da direita */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Efeito de pulso nos valores quando atualizam */
+@keyframes valuePulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+.value-updated {
+  animation: valuePulse 0.4s ease;
+}
+
+
+/* ==========================================
+   📱 RESPONSIVIDADE (MEDIA QUERIES)
+   ==========================================
+   Media queries permitem mudar o CSS baseado no tamanho da tela.
+   
+   @media (max-width: 768px) significa:
+   "Se a tela tiver NO MÁXIMO 768px de largura (celulares/tablets),
+   aplique estes estilos."
+   
+   Isso é ESSENCIAL para sites modernos e entrevistadores
+   SEMPRE verificam se o site funciona em celulares!
+*/
+
+/* Telas médias (tablets) */
+@media (max-width: 1024px) {
+  .content-grid {
+    /* Em tablets, as duas colunas ficam com tamanhos mais iguais */
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* Telas pequenas (celulares) */
+@media (max-width: 768px) {
+  .app-container {
+    padding: var(--espaco-sm);
+  }
+  
+  .app-header h1 {
+    font-size: 1.6rem;
+  }
+  
+  .header-icon {
+    font-size: 2rem;
+  }
+  
+  /* Cards de resumo: de 3 colunas para 1 coluna */
+  .summary-cards {
+    grid-template-columns: 1fr;
+    gap: var(--espaco-sm);
+  }
+  
+  /* Conteúdo principal: de 2 colunas para 1 coluna */
+  .content-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .card {
+    padding: var(--espaco-sm);
+  }
+  
+  .card-value {
+    font-size: 1.5rem;
+  }
+  
+  /* Filtros: de linha para coluna */
+  .filter-bar {
+    flex-direction: column;
+  }
+  
+  .transaction-list {
+    max-height: 350px;
+  }
+  
+  .btn-delete {
+    opacity: 1;  /* Sempre visível em mobile (sem hover) */
+  }
+}
+
+/* Telas muito pequenas */
+@media (max-width: 480px) {
+  .app-header h1 {
+    font-size: 1.3rem;
+  }
+  
+  .header-title {
+    gap: 10px;
+  }
+  
+  .form-row {
+    /* Campos lado a lado viram um embaixo do outro */
+    grid-template-columns: 1fr;
+  }
+  
+  .transaction-amount {
+    font-size: 0.9rem;
+  }
+}
