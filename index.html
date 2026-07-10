@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<!--
+  ============================================
+  📄 INDEX.HTML — A ESTRUTURA DA PÁGINA
+  ============================================
+  
+  O HTML é o "esqueleto" do site. Ele define O QUE aparece na tela:
+  textos, botões, formulários, imagens, etc.
+  
+  Pense no HTML como a planta de uma casa:
+  - Ele diz onde ficam os cômodos (seções)
+  - Mas não diz a cor das paredes (isso é o CSS)
+  - Nem como a porta abre (isso é o JavaScript)
+  
+  CONCEITOS IMPORTANTES:
+  - Tags: são os "blocos" do HTML. Ex: <div>, <p>, <h1>
+  - Atributos: informações extras nas tags. Ex: id="nome", class="estilo"
+  - HTML Semântico: usar tags que descrevem o conteúdo
+    Ex: <header> para cabeçalho, <main> para conteúdo principal
+    (entrevistadores adoram ver isso!)
+  ============================================
+-->
+<html lang="pt-BR">
+<!-- 
+  lang="pt-BR" diz ao navegador que a página está em português do Brasil.
+  Isso ajuda leitores de tela e o Google a entenderem o idioma.
+-->
+
+<head>
+  <!-- 
+    O <head> contém informações SOBRE a página, mas que NÃO aparecem na tela.
+    É como a ficha técnica de um produto.
+  -->
+  
+  <!-- Define a codificação de caracteres (para acentos funcionarem) -->
+  <meta charset="UTF-8">
+  
+  <!-- Faz o site funcionar bem em celulares (responsividade) -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- Título que aparece na aba do navegador -->
+  <title>Dashboard Financeiro | Controle suas Finanças</title>
+  
+  <!-- Descrição para o Google (SEO) -->
+  <meta name="description" content="Dashboard de finanças pessoais para controlar receitas, despesas e visualizar seus gastos por categoria.">
+  
+  <!-- 
+    Fonte "Inter" do Google Fonts — uma fonte moderna e profissional.
+    Em vez de usar a fonte padrão do navegador (que é feia),
+    carregamos uma fonte bonita da internet.
+  -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- 
+    Chart.js — biblioteca para criar gráficos bonitos.
+    Estamos carregando ela de um CDN (servidor na internet).
+    Assim não precisamos baixar nada, só usar.
+  -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+  
+  <!-- Nosso arquivo de estilos (CSS) -->
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <!-- 
+    O <body> contém tudo que APARECE na tela.
+    É o conteúdo visível do site.
+  -->
+  
+  <!-- 
+    Container principal — envolve todo o conteúdo.
+    Usamos ele para centralizar e limitar a largura máxima do site.
+  -->
+  <div class="app-container">
+    
+    <!-- ========== CABEÇALHO ========== -->
+    <!-- 
+      <header> é uma tag semântica que indica "isto é o cabeçalho".
+      Usar tags semânticas é uma boa prática que entrevistadores valorizam.
+    -->
+    <header class="app-header">
+      <div class="header-content">
+        <div class="header-title">
+          <span class="header-icon">💰</span>
+          <!-- <h1> é o título principal. Toda página deve ter UM <h1> (SEO) -->
+          <h1>Meu Dashboard Financeiro</h1>
+        </div>
+        <p class="header-subtitle">Controle suas finanças de forma simples e visual</p>
+      </div>
+    </header>
+
+    <!-- ========== CONTEÚDO PRINCIPAL ========== -->
+    <!-- 
+      <main> indica o conteúdo principal da página.
+      Outra tag semântica importante!
+    -->
+    <main>
+      
+      <!-- ===== CARDS DE RESUMO ===== -->
+      <!-- 
+        Três cards mostrando os totais: Receitas, Despesas e Saldo.
+        Usamos <section> (outra tag semântica) para agrupar conteúdo relacionado.
+      -->
+      <section class="summary-cards" aria-label="Resumo financeiro">
+        
+        <!-- Card de Receitas (entradas de dinheiro) -->
+        <div class="card summary-card card-income" id="card-income">
+          <div class="card-header">
+            <span class="card-icon">📈</span>
+            <h3>Receitas</h3>
+          </div>
+          <p class="card-value" id="total-income">R$ 0,00</p>
+          <span class="card-badge">Entradas</span>
+        </div>
+        
+        <!-- Card de Despesas (saídas de dinheiro) -->
+        <div class="card summary-card card-expense" id="card-expense">
+          <div class="card-header">
+            <span class="card-icon">📉</span>
+            <h3>Despesas</h3>
+          </div>
+          <p class="card-value" id="total-expense">R$ 0,00</p>
+          <span class="card-badge">Saídas</span>
+        </div>
+        
+        <!-- Card de Saldo (receitas - despesas) -->
+        <div class="card summary-card card-balance" id="card-balance">
+          <div class="card-header">
+            <span class="card-icon">💎</span>
+            <h3>Saldo</h3>
+          </div>
+          <p class="card-value" id="total-balance">R$ 0,00</p>
+          <span class="card-badge">Disponível</span>
+        </div>
+        
+      </section>
+
+      <!-- ===== ÁREA DE CONTEÚDO (Formulário + Gráfico + Histórico) ===== -->
+      <section class="content-grid">
+        
+        <!-- --- PAINEL ESQUERDO: Formulário + Gráfico --- -->
+        <div class="left-panel">
+          
+          <!-- FORMULÁRIO PARA ADICIONAR TRANSAÇÃO -->
+          <!-- 
+            <form> é o elemento HTML para formulários.
+            Quando o usuário clica em "Adicionar", o JavaScript
+            captura os dados e cria uma nova transação.
+            
+            O atributo id="transaction-form" permite que o JavaScript
+            encontre este formulário na página.
+          -->
+          <div class="card form-card">
+            <h2 class="section-title">
+              <span>➕</span> Nova Transação
+            </h2>
+            
+            <form id="transaction-form">
+              <!-- 
+                Cada campo do formulário fica dentro de um "form-group".
+                Isso ajuda a organizar o visual (label em cima, input embaixo).
+              -->
+              
+              <!-- Campo: Descrição -->
+              <div class="form-group">
+                <!-- <label> conecta o texto ao campo. Clicar no label foca o input. -->
+                <label for="input-description">Descrição</label>
+                <!-- 
+                  <input> é um campo de texto.
+                  - type="text": aceita qualquer texto
+                  - id: identificador único (JS usa isso pra pegar o valor)
+                  - placeholder: texto cinza de exemplo
+                  - required: campo obrigatório (não pode enviar vazio)
+                -->
+                <input 
+                  type="text" 
+                  id="input-description" 
+                  placeholder="Ex: Salário, Aluguel, Mercado..." 
+                  required
+                  autocomplete="off"
+                >
+              </div>
+              
+              <!-- Campo: Valor -->
+              <div class="form-group">
+                <label for="input-amount">Valor (R$)</label>
+                <!-- 
+                  type="number": só aceita números
+                  step="0.01": permite centavos (1.50, 29.99, etc.)
+                  min="0.01": valor mínimo de 1 centavo
+                -->
+                <input 
+                  type="number" 
+                  id="input-amount" 
+                  placeholder="0,00" 
+                  step="0.01" 
+                  min="0.01" 
+                  required
+                >
+              </div>
+              
+              <!-- Linha com dois campos lado a lado -->
+              <div class="form-row">
+                <!-- Campo: Tipo (Receita ou Despesa) -->
+                <div class="form-group">
+                  <label for="input-type">Tipo</label>
+                  <!-- 
+                    <select> cria uma lista suspensa (dropdown).
+                    <option> são as opções dentro do dropdown.
+                    O "value" é o valor que o JavaScript recebe.
+                  -->
+                  <select id="input-type">
+                    <option value="expense">💸 Despesa</option>
+                    <option value="income">💰 Receita</option>
+                  </select>
+                </div>
+                
+                <!-- Campo: Categoria -->
+                <div class="form-group">
+                  <label for="input-category">Categoria</label>
+                  <!-- 
+                    Este select começa vazio!
+                    O JavaScript vai preencher as opções automaticamente
+                    baseado no tipo selecionado (receita ou despesa).
+                  -->
+                  <select id="input-category"></select>
+                </div>
+              </div>
+              
+              <!-- Campo: Data -->
+              <div class="form-group">
+                <label for="input-date">Data</label>
+                <!-- type="date" mostra um seletor de calendário -->
+                <input type="date" id="input-date" required>
+              </div>
+              
+              <!-- Botão de enviar -->
+              <!-- 
+                type="submit" faz o formulário ser enviado ao clicar.
+                O JavaScript intercepta esse envio e processa os dados.
+              -->
+              <button type="submit" class="btn-submit" id="btn-add">
+                <span class="btn-icon">✨</span>
+                Adicionar Transação
+              </button>
+            </form>
+          </div>
+          
+          <!-- GRÁFICO DE DESPESAS POR CATEGORIA -->
+          <!-- 
+            Aqui fica o gráfico de rosca (donut) que mostra
+            quanto você gasta em cada categoria.
+            O Chart.js desenha o gráfico dentro do <canvas>.
+          -->
+          <div class="card chart-card">
+            <h2 class="section-title">
+              <span>📊</span> Despesas por Categoria
+            </h2>
+            <div class="chart-wrapper">
+              <!-- 
+                <canvas> é um elemento especial do HTML5 que permite
+                desenhar gráficos, jogos, etc. O Chart.js usa ele.
+              -->
+              <canvas id="expense-chart"></canvas>
+            </div>
+            <!-- Mensagem que aparece quando não há despesas -->
+            <p class="empty-message" id="chart-empty">
+              Adicione despesas para ver o gráfico 📊
+            </p>
+          </div>
+          
+        </div>
+        
+        <!-- --- PAINEL DIREITO: Histórico de Transações --- -->
+        <div class="right-panel">
+          <div class="card history-card">
+            <h2 class="section-title">
+              <span>📋</span> Histórico de Transações
+            </h2>
+            
+            <!-- BARRA DE FILTROS -->
+            <!-- Permite buscar e filtrar transações -->
+            <div class="filter-bar">
+              <div class="search-wrapper">
+                <span class="search-icon">🔍</span>
+                <input 
+                  type="text" 
+                  id="filter-search" 
+                  placeholder="Buscar transação..."
+                  autocomplete="off"
+                >
+              </div>
+              <select id="filter-type">
+                <option value="all">📋 Todos</option>
+                <option value="income">📈 Receitas</option>
+                <option value="expense">📉 Despesas</option>
+              </select>
+            </div>
+            
+            <!-- LISTA DE TRANSAÇÕES -->
+            <!-- 
+              Esta div vai ser preenchida pelo JavaScript.
+              Cada transação será um item dentro desta lista.
+            -->
+            <div class="transaction-list" id="transaction-list">
+              <!-- Mensagem quando não há transações -->
+              <div class="empty-state" id="list-empty">
+                <span class="empty-icon">📝</span>
+                <p>Nenhuma transação ainda</p>
+                <p class="empty-hint">Use o formulário ao lado para adicionar!</p>
+              </div>
+            </div>
+            
+          </div>
+        </div>
+        
+      </section>
+    </main>
+    
+    <!-- ========== RODAPÉ ========== -->
+    <footer class="app-footer">
+      <p>Feito com ❤️ por Lucca</p>
+    </footer>
+    
+  </div>
+  
+  <!-- 
+    TOAST (NOTIFICAÇÃO) — aparece no canto inferior quando
+    o usuário adiciona ou deleta uma transação.
+  -->
+  <div class="toast" id="toast"></div>
+  
+  <!-- 
+    Nosso arquivo JavaScript — SEMPRE no final do <body>!
+    Isso garante que o HTML já foi carregado antes do JS executar.
+    Se colocássemos no <head>, o JS tentaria acessar elementos
+    que ainda não existem e daria erro.
+  -->
+  <script src="script.js"></script>
+</body>
+</html>
